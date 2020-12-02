@@ -18,7 +18,9 @@ services:
       - backend
 
   server:
-    image: backend
+    image: server
+    build:
+      context: ./
     deploy:
       restart_policy:
         condition: on-failure
@@ -26,6 +28,8 @@ services:
       - "8080"
     networks:
       - backend
+    # volumes:
+    #   - ./:/app
     depends_on:
       - mongodb
       - rabbitmq

@@ -15,7 +15,7 @@ RUN apk update && apk add --no-cache git \
 
 WORKDIR /app
 
-COPY go.mod .
+COPY go.mod /.
 COPY go.sum .
 
 RUN go mod download
@@ -37,12 +37,16 @@ COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /user/group /user/passwd /etc/
 
 COPY --from=builder /app/tomox-sdk /tomox/
+COPY --from=builder /app/config/config.yaml /tomox/config/config.yaml
+COPY --from=builder /app/config/errors.yaml /tomox/config/errors.yaml
+
+RUN ls -la /tomox
 
 WORKDIR /tomox
-
+RUN mkdir -p logs
 USER nobody:nobody
 
-RUN mkdir logs
+#RUN mkdir -p logs
 
 ENTRYPOINT ["/tomox/tomox-sdk"]
 
